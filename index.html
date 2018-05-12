@@ -33,6 +33,11 @@ L.tileLayer(
 	}
 ).addTo(map);
 
+map.on('locationfound', function(e){
+	L.circle(e.latlng, e.accuracy/2).addTo(map);
+});
+map.locate();
+
 	</script>
 </body>
 
