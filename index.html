@@ -41,7 +41,11 @@ map.on('locationfound', function(e){
 map.locate();
 
 map.on('click', function(e){
-	L.marker(e.latlng).addTo(map);
+	var description=prompt("What's up?");
+	if(!description) return;
+	var marker=L.marker(e.latlng);
+	marker.bindTooltip(description, {permanent: true}).openTooltip();
+	marker.addTo(map);
 });
 
 	</script>
