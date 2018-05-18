@@ -15,6 +15,7 @@ args=parser.parse_args()
 def invoke(*args): subprocess.check_call(args)
 def psql(*args): invoke('sudo', '-i', '-u', 'postgres', 'psql', *args)
 def psqlc(command): psql('-c', command)
+def psqla(name, value): psqlc("ALTER ROLE map_database_user SET {} TO '{}';".format(name, value))
 
 if args.create_database: psqlc('CREATE DATABASE map_database')
 
@@ -32,5 +33,9 @@ if args.create_user:
 	configuration=recursive_defaultdict_builder()
 	settings_secret.inject(configuration)
 	psqlc("CREATE USER map_database_user WITH PASSWORD '{}';".format(configuration['DATABASES']['default']['PASSWORD']))
+	psqla('client_encoding', 'utf8')
+	psqla('default_transaction_isolation', 'read committed')
+	psqla('timezone', 'UTC')
+	psqlc('GRANT ALL PRIVILEGES ON DATABASE map_database TO map_database_user;')
 
 if args.drop_user: psqlc('DROP USER map_database_user')
