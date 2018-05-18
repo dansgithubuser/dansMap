@@ -12,9 +12,14 @@ parser.add_argument('--create-user', action='store_true')
 parser.add_argument('--drop-user', action='store_true', help='as implemented, database must be dropped first')
 parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
+parser.add_argument('--deploy-setup', action='store_true')
+parser.add_argument('--deploy', action='store_true')
 args=parser.parse_args()
 
-def invoke(*args): subprocess.check_call(args)
+def invoke(*args):
+	print('invoking {}'.format(args))
+	subprocess.check_call(args)
+
 def postgres(*args): invoke('sudo', '-i', '-u', 'postgres', *args)
 def psql(*args): postgres('psql', *args)
 def psqlc(command): psql('-c', command)
@@ -43,3 +48,9 @@ if args.database_server_start:
 
 if args.database_server_stop:
 	invoke('sudo', 'systemctl', 'stop', 'postgresql@10-main')
+
+if args.deploy_setup:
+	invoke('git', 'remote', 'add', 'heroku', 'https://git.heroku.com/safe-everglades-62273.git')
+
+if args.deploy:
+	invoke('git', 'push', 'heroku', 'master')
