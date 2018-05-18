@@ -13,7 +13,7 @@ parser.add_argument('--drop-user', action='store_true', help='as implemented, da
 parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
 parser.add_argument('--deploy-setup', action='store_true')
-parser.add_argument('--deploy', action='store_true')
+parser.add_argument('--deploy', '-d', action='store_true')
 args=parser.parse_args()
 
 def invoke(*args):
