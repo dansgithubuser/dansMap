@@ -9,6 +9,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--create-database', action='store_true')
 parser.add_argument('--drop-database', action='store_true')
 parser.add_argument('--create-user', action='store_true')
+parser.add_argument('--drop-user', action='store_true')
 args=parser.parse_args()
 
 def invoke(*args): subprocess.check_call(args)
@@ -31,3 +32,5 @@ if args.create_user:
 	configuration=recursive_defaultdict_builder()
 	settings_secret.inject(configuration)
 	psqlc("CREATE USER map_database_user WITH PASSWORD '{}';".format(configuration['DATABASES']['default']['PASSWORD']))
+
+if args.drop_user: psqlc('DROP USER map_database_user')
