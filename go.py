@@ -53,4 +53,5 @@ if args.deploy_setup:
 	invoke('git', 'remote', 'add', 'heroku', 'https://git.heroku.com/safe-everglades-62273.git')
 
 if args.deploy:
+	invoke('python3', 'manage.py', 'check', '--deploy')
 	invoke('git', 'push', 'heroku', 'master')
