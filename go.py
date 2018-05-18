@@ -9,7 +9,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--create-database', action='store_true')
 parser.add_argument('--drop-database', action='store_true')
 parser.add_argument('--create-user', action='store_true')
-parser.add_argument('--drop-user', action='store_true')
+parser.add_argument('--drop-user', action='store_true', help='as implemented, database must be dropped first')
 parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
 args=parser.parse_args()
@@ -30,12 +30,7 @@ if args.drop_database:
 	psqlc('DROP DATABASE map_database')
 
 if args.create_user:
-	sys.path.append(os.path.join('dansmap'))
-	import settings_secret
-	recursive_defaultdict_builder=lambda: defaultdict(recursive_defaultdict_builder)
-	configuration=recursive_defaultdict_builder()
-	settings_secret.inject(configuration)
-	psqlc("CREATE USER map_database_user WITH PASSWORD '{}';".format(configuration['DATABASES']['default']['PASSWORD']))
+	psqlc("CREATE USER map_database_user WITH PASSWORD 'dev-password';")
 	psqla('client_encoding', 'utf8')
 	psqla('default_transaction_isolation', 'read committed')
 	psqla('timezone', 'UTC')

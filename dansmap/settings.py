@@ -79,6 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'map_database',
         'USER': 'map_database_user',
+        'PASSWORD': os.environ.get('DANSMAP_DATABASE_PASSWORD', 'dev-password'),
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -122,6 +123,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-from . import settings_secret
-settings_secret.inject(globals())
