@@ -1,3 +1,3 @@
 *.swp
 __pycache__
-dansmap/settings_secret.py
+static
