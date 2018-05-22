@@ -14,6 +14,7 @@ parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
 parser.add_argument('--deploy-setup', action='store_true')
 parser.add_argument('--deploy', '-d', action='store_true')
+parser.add_argument('--log', '-l', action='store_true')
 args=parser.parse_args()
 
 def invoke(*args):
@@ -55,3 +56,6 @@ if args.deploy_setup:
 if args.deploy:
 	invoke('python3', 'manage.py', 'check', '--deploy')
 	invoke('git', 'push', 'heroku', 'master')
+
+if args.log:
+	invoke('heroku', 'logs', '--tail')
