@@ -63,7 +63,11 @@ map.on('click', function(e){
 		method: 'POST',
 		credentials: 'same-origin',
 		headers: {'X-CSRFToken': getCookie('csrftoken')},
-		body: JSON.stringify({text: description})
+		body: JSON.stringify({
+			text: description,
+			latitude: e.latlng.lat,
+			longitude: e.latlng.lng,
+		})
 	});
 	var marker=L.marker(e.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
