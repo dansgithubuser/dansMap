@@ -11,6 +11,7 @@ parser.add_argument('--create-database', action='store_true')
 parser.add_argument('--drop-database', action='store_true')
 parser.add_argument('--create-user', action='store_true')
 parser.add_argument('--drop-user', action='store_true', help='as implemented, database must be dropped first')
+parser.add_argument('--database-freshen', action='store_true', help='drop database and user; create database and user')
 parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
 parser.add_argument('--migrate', action='store_true')
@@ -31,23 +32,28 @@ def psql(*args): postgres('psql', *args)
 def psqlc(command): psql('-c', command)
 def psqla(name, value): psqlc("ALTER ROLE map_database_user SET {} TO '{}';".format(name, value))
 
-if args.create_database: psqlc('CREATE DATABASE map_database')
+def create_database(): psqlc('CREATE DATABASE map_database')
+if args.create_database: create_database()
 
-if args.drop_database:
-	print('dropping in')
-	for i in range(5):
-		print(5-i)
-		time.sleep(1)
-	psqlc('DROP DATABASE map_database')
+def drop_database(): psqlc('DROP DATABASE map_database')
+if args.drop_database: drop_database()
 
-if args.create_user:
+def create_user():
 	psqlc("CREATE USER map_database_user WITH PASSWORD 'dev-password';")
 	psqla('client_encoding', 'utf8')
 	psqla('default_transaction_isolation', 'read committed')
 	psqla('timezone', 'UTC')
 	psqlc('GRANT ALL PRIVILEGES ON DATABASE map_database TO map_database_user;')
+if args.create_user: create_user()
 
-if args.drop_user: psqlc('DROP USER map_database_user')
+def drop_user(): psqlc('DROP USER map_database_user')
+if args.drop_user: drop_user()
+
+if args.database_freshen:
+	drop_database()
+	drop_user()
+	create_database()
+	create_user()
 
 if args.database_server_start:
 	invoke('sudo', 'systemctl', 'start', 'postgresql@10-main')
