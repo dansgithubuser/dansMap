@@ -17,6 +17,7 @@ parser.add_argument('--deploy-setup', action='store_true')
 parser.add_argument('--deploy', '-d', action='store_true')
 parser.add_argument('--log', '-l', action='store_true')
 parser.add_argument('--run', '-r', action='store_true')
+parser.add_argument('--heroku-psql', action='store_true')
 args=parser.parse_args()
 
 def invoke(*args):
@@ -69,3 +70,6 @@ if args.log:
 
 if args.run:
 	invoke('python3', 'manage.py', 'runserver', '--settings', 'dansmap.settings_debug')
+
+if args.heroku_psql:
+	invoke('heroku', 'pg:psql')
