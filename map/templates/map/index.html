@@ -57,12 +57,14 @@ function getCookie(name){
 map.on('click', function(e){
 	var description=prompt("What's up?");
 	if(!description) return;
-	var req=new XMLHttpRequest();
 	var host='https://safe-everglades-62273.herokuapp.com';
 	{% if DEBUG %} host='http://127.0.0.1:8000'; {% endif %}
-	req.open('POST', host+'/note_new', false);
-	req.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-	req.send({text: description});
+	fetch(host+'/note_new', {
+		method: 'POST',
+		credentials: 'same-origin',
+		headers: {'X-CSRFToken': getCookie('csrftoken')},
+		body: JSON.stringify({text: description})
+	});
 	var marker=L.marker(e.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
 	marker.addTo(map);
