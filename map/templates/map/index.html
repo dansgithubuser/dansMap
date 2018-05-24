@@ -42,6 +42,18 @@ map.on('locationfound', function(e){
 });
 map.locate();
 
+function getCookie(name){
+	if(document.cookie){
+		var cookies=document.cookie.split(';');
+		for(var i=0; i<cookies.length; i++){
+			var cookie=cookies[i].trim();
+			if(cookie.substring(0, name.length+1)===(name+'='))
+				return decodeURIComponent(cookie.substring(name.length+1));
+		}
+	}
+	return null;
+}
+
 map.on('click', function(e){
 	var description=prompt("What's up?");
 	if(!description) return;
@@ -49,6 +61,7 @@ map.on('click', function(e){
 	var host='https://safe-everglades-62273.herokuapp.com';
 	{% if DEBUG %} host='http://127.0.0.1:8000'; {% endif %}
 	req.open('POST', host+'/note_new', false);
+	req.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
 	req.send({text: description});
 	var marker=L.marker(e.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
