@@ -61,6 +61,7 @@ if args.deploy_setup:
 
 if args.deploy:
 	invoke('python3', 'manage.py', 'check', '--deploy')
+	invoke('heroku', 'run', 'python', 'manage.py', 'migrate')
 	invoke('git', 'push', '-f', 'heroku', 'master')
 
 if args.log:
