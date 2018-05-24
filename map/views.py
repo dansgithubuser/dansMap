@@ -12,7 +12,7 @@ def index(request):
 
 def note_new(request):
 	body=json.loads(request.body.decode('utf-8'))
-	note=Note(text=body['text'])
+	note=Note(**{i: body[i] for i in ['text', 'latitude', 'longitude']})
 	if request.user.is_authenticated: note.user=request.user
 	note.save()
 
