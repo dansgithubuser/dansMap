@@ -3,5 +3,5 @@ from django.db import models
 
 class Note(models.Model):
 	text=models.TextField()
-	created=models.DateTimeField()
-	user=models.ForeignKey(User, models.CASCADE)
+	created=models.DateTimeField(auto_now_add=True)
+	user=models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
