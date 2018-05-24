@@ -9,4 +9,4 @@ class Note(models.Model):
 	user=models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
 
 	def __str__(self):
-		return '{} {} {}'.format(self.created, self.user, self.text[:40])
+		return '{} {} ({}, {}) {}'.format(self.created, self.user, self.latitude, self.longitude, self.text[:40])
