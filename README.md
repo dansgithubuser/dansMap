@@ -1,12 +1,15 @@
 todo:
-- complete django deployment
-- add API for annotations
-- investigate hosting map as static page of django app
+- why isn't note_new working in deployment?
+- load notes on page load
 
 ideas:
 - create a wiki-like annotation system
 	- allow users to be notified of modifications to annotations
 	- allow users to + or - value of annotations
+		- consider different dimensions?
+			- true/false
+			- redundant/novel
+			- relevant/not
 	- allow users to set an expiration date for annotations
 	- allow users to mark annotations as expired
 - annotation summary
