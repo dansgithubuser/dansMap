@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import time
+import webbrowser
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--create-database', action='store_true')
@@ -18,6 +19,7 @@ parser.add_argument('--deploy', '-d', action='store_true')
 parser.add_argument('--log', '-l', action='store_true')
 parser.add_argument('--run', '-r', action='store_true')
 parser.add_argument('--heroku-psql', action='store_true')
+parser.add_argument('--browser', '-b', action='store_true')
 args=parser.parse_args()
 
 def invoke(*args):
@@ -73,3 +75,6 @@ if args.run:
 
 if args.heroku_psql:
 	invoke('heroku', 'pg:psql')
+
+if args.browser:
+	webbrowser.open_new_tab('https://safe-everglades-62273.herokuapp.com')
