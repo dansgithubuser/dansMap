@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.template import loader
 import json
 from .models import Note
 
 def index(request):
-	return HttpResponse(loader.get_template('map/index.html').render({}, request))
+	return HttpResponse(loader.get_template('map/index.html').render({
+		'DEBUG': settings.DEBUG,
+	}, request))
 
 def note_new(request):
 	note=Note(text=request.POST['text'])

@@ -46,7 +46,9 @@ map.on('click', function(e){
 	var description=prompt("What's up?");
 	if(!description) return;
 	var req=new XMLHttpRequest();
-	req.open('POST', 'https://safe-everglades-62273.herokuapp.com/map/note_new', false);
+	var host='https://safe-everglades-62273.herokuapp.com';
+	{% if DEBUG %} host='http://127.0.0.1:8000'; {% endif %}
+	req.open('POST', host+'/note_new', false);
 	req.send({text: description});
 	var marker=L.marker(e.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
