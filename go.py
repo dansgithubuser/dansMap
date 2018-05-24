@@ -12,6 +12,7 @@ parser.add_argument('--create-user', action='store_true')
 parser.add_argument('--drop-user', action='store_true', help='as implemented, database must be dropped first')
 parser.add_argument('--database-server-start', '--db', action='store_true')
 parser.add_argument('--database-server-stop', action='store_true')
+parser.add_argument('--migrate', action='store_true')
 parser.add_argument('--deploy-setup', action='store_true')
 parser.add_argument('--deploy', '-d', action='store_true')
 parser.add_argument('--log', '-l', action='store_true')
@@ -50,6 +51,10 @@ if args.database_server_start:
 
 if args.database_server_stop:
 	invoke('sudo', 'systemctl', 'stop', 'postgresql@10-main')
+
+if args.migrate:
+	invoke('python3', 'manage.py', 'makemigrations', 'map')
+	invoke('python3', 'manage.py', 'migrate')
 
 if args.deploy_setup:
 	invoke('git', 'remote', 'add', 'heroku', 'https://git.heroku.com/safe-everglades-62273.git')
