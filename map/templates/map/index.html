@@ -21,6 +21,14 @@ html, body {
 	<div style='position: absolute; left: 0; top: 75%; width: 100%; height: 25%; z-index: 1; background-color: rgba(0, 0, 0, 0.5)'>
 		<button type='button' onclick='map.locate()'>to me</button>
 	</div>
+	<div style='display: none;'>
+		<form id='note_new' method='post' action='/note_new'>
+			{% csrf_token %}
+			<input id='note_new_text' type='text' name='text'/>
+			<input id='note_new_latitude' type='text' name='latitude'/>
+			<input id='note_new_longitude' type='text' name='longitude'/>
+		</form>
+	</div>
 	<script>
 
 var map=L.map('map').setView([45, 0], 2);
@@ -42,36 +50,16 @@ map.on('locationfound', function(e){
 });
 map.locate();
 
-function getCookie(name){
-	if(document.cookie){
-		var cookies=document.cookie.split(';');
-		for(var i=0; i<cookies.length; i++){
-			var cookie=cookies[i].trim();
-			if(cookie.substring(0, name.length+1)===(name+'='))
-				return decodeURIComponent(cookie.substring(name.length+1));
-		}
-	}
-	return null;
-}
+function e(id){ return document.getElementById(id); }
 
-map.on('click', function(e){
+map.on('click', function(evt){
 	var description=prompt("What's up?");
 	if(!description) return;
-	var host='https://safe-everglades-62273.herokuapp.com';
-	{% if DEBUG %} host='http://127.0.0.1:8000'; {% endif %}
-	var csrf_token=getCookie('csrftoken');
-	if(!csrf_token) console.log('No CSRF token!');
-	fetch(host+'/note_new', {
-		method: 'POST',
-		credentials: 'same-origin',
-		headers: {'X-CSRFToken': csrf_token},
-		body: JSON.stringify({
-			text: description,
-			latitude: e.latlng.lat,
-			longitude: e.latlng.lng,
-		})
-	});
-	var marker=L.marker(e.latlng);
+	e('note_new_text').value=description;
+	e('note_new_latitude').value=evt.latlng.lat;
+	e('note_new_longitude').value=evt.latlng.lng;
+	e('note_new').submit();
+	var marker=L.marker(evt.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
 	marker.addTo(map);
 });

@@ -11,8 +11,7 @@ def index(request):
 	}, request))
 
 def note_new(request):
-	body=json.loads(request.body.decode('utf-8'))
-	note=Note(**{i: body[i] for i in ['text', 'latitude', 'longitude']})
+	note=Note(**{i: request.POST[i] for i in ['text', 'latitude', 'longitude']})
 	if request.user.is_authenticated: note.user=request.user
 	note.save()
 	return HttpResponse(status=201)
