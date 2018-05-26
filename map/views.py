@@ -18,4 +18,4 @@ def note_new(request):
 	return HttpResponse(status=201)
 
 def note_get(request):
-	return HttpResponse(json.dumps([str(i) for i in Note.objects.all()]))
+	return HttpResponse(json.dumps([i.to_dict() for i in Note.objects.all()]))

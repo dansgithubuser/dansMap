@@ -10,3 +10,9 @@ class Note(models.Model):
 
 	def __str__(self):
 		return '{} {} ({}, {}) {}'.format(self.created, self.user, self.latitude, self.longitude, self.text[:40])
+
+	def to_dict(self):
+		def simplify(x):
+			if x is None: return None
+			return str(x)
+		return {i: simplify(getattr(self, i)) for i in ['text', 'latitude', 'longitude', 'created', 'user']}
