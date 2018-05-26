@@ -39,11 +39,14 @@ L.tileLayer(
 	}
 ).addTo(map);
 
-map.on('locationfound', function(e){
-	var r=e.accuracy/2;
-	if(!loc) loc=L.circle(e.latlng, r).addTo(map);
-	else loc.setLatLng(e.latlng).setRadius(r);
-	map.setView(e.latlng, 13);
+map.on('locationfound', function(evt){
+	var r=evt.accuracy/2;
+	if(!loc) loc=L.circle(evt.latlng, r).addTo(map);
+	else loc.setLatLng(evt.latlng).setRadius(r);
+	map.setView(evt.latlng, 13);
+});
+map.on('locationerror', function(evt){
+	console.log(evt.code+': '+evt.message);
 });
 map.locate();
 
