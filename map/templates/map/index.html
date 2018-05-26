@@ -24,9 +24,6 @@ html, body {
 	<div style='display: none;'>
 		<form id='note_new' method='post' action='/note_new'>
 			{% csrf_token %}
-			<input id='note_new_text' type='text' name='text'/>
-			<input id='note_new_latitude' type='text' name='latitude'/>
-			<input id='note_new_longitude' type='text' name='longitude'/>
 		</form>
 	</div>
 	<script>
@@ -55,10 +52,16 @@ function e(id){ return document.getElementById(id); }
 map.on('click', function(evt){
 	var description=prompt("What's up?");
 	if(!description) return;
-	e('note_new_text').value=description;
-	e('note_new_latitude').value=evt.latlng.lat;
-	e('note_new_longitude').value=evt.latlng.lng;
-	e('note_new').submit();
+	fetch(window.location.href+'note_new', {
+		method: 'POST',
+		credentials: 'same-origin',
+		headers: {'X-CSRFToken': e('note_new').children[0].value},
+		body: JSON.stringify({
+			text: description,
+			latitude: evt.latlng.lat,
+			longitude: evt.latlng.lng,
+		}),
+	});
 	var marker=L.marker(evt.latlng);
 	marker.bindTooltip(description, {permanent: true}).openTooltip();
 	marker.addTo(map);
