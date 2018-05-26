@@ -1,6 +1,4 @@
 todo:
-- why isn't note_new working in deployment?
-- load notes on page load
 
 ideas:
 - create a wiki-like annotation system

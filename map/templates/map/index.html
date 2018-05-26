@@ -49,22 +49,39 @@ map.locate();
 
 function e(id){ return document.getElementById(id); }
 
+function request(action, method, body){
+	var r={
+		method: method,
+		credentials: 'same-origin',
+		headers: {'X-CSRFToken': e('note_new').children[0].value},
+	};
+	if(body) r.body=JSON.stringify(body);
+	return fetch(window.location.href+action, r);
+}
+
+function addNote(latlng, text){
+	var marker=L.marker(latlng);
+	marker.bindTooltip(text, {permanent: true}).openTooltip();
+	marker.addTo(map);
+}
+
 map.on('click', function(evt){
 	var description=prompt("What's up?");
 	if(!description) return;
-	fetch(window.location.href+'note_new', {
-		method: 'POST',
-		credentials: 'same-origin',
-		headers: {'X-CSRFToken': e('note_new').children[0].value},
-		body: JSON.stringify({
-			text: description,
-			latitude: evt.latlng.lat,
-			longitude: evt.latlng.lng,
-		}),
+	request('note_new', 'POST', {
+		text: description,
+		latitude: evt.latlng.lat,
+		longitude: evt.latlng.lng,
 	});
-	var marker=L.marker(evt.latlng);
-	marker.bindTooltip(description, {permanent: true}).openTooltip();
-	marker.addTo(map);
+	addNote(evt.latlng, description);
+});
+
+request('note_get', 'GET').then(function(response){
+	return response.json();
+}).then(function(notes){
+	for(var i=0; i<notes.length; ++i){
+		addNote(L.latLng(notes[i].latitude, notes[i].longitude), notes[i].text);
+	}
 });
 
 	</script>
