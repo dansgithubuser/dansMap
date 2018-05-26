@@ -59,10 +59,12 @@ map.on('click', function(e){
 	if(!description) return;
 	var host='https://safe-everglades-62273.herokuapp.com';
 	{% if DEBUG %} host='http://127.0.0.1:8000'; {% endif %}
+	var csrf_token=getCookie('csrftoken');
+	if(!csrf_token) console.log('No CSRF token!');
 	fetch(host+'/note_new', {
 		method: 'POST',
 		credentials: 'same-origin',
-		headers: {'X-CSRFToken': getCookie('csrftoken')},
+		headers: {'X-CSRFToken': csrf_token},
 		body: JSON.stringify({
 			text: description,
 			latitude: e.latlng.lat,
